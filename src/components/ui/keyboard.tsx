@@ -1,5 +1,5 @@
 'use client';
-// eslint-disable-next-line react-refresh/only-export-components
+/* eslint-disable react-refresh/only-export-components */
 import { cn } from "@/lib/utils";
 import {
   IconArrowNarrowLeft,
@@ -34,6 +34,7 @@ import {
   type ReactNode,
   type RefObject,
 } from "react";
+import { useWebHaptics } from "web-haptics/react";
 
 export type KeyboardEventSource = "physical" | "pointer";
 export type KeyboardEventPhase = "down" | "up";
@@ -58,7 +59,7 @@ export function Keyboard({
   className,
   theme = "classic",
   enableSound = true,
-  enableHaptics = false,
+  enableHaptics = true,
   soundUrl = "/sounds/sound.ogg",
   onKeyEvent,
 }: KeyboardProps) {
@@ -124,6 +125,7 @@ function KeyboardProvider({
   const audioContextRef = useRef<AudioContext | null>(null);
   const audioBufferRef = useRef<AudioBuffer | null>(null);
   const pressedKeysRef = useRef<Set<string>>(new Set());
+  const { trigger } = useWebHaptics();
 
   const [pressedKeys, setPressedKeys] = useState<Set<string>>(new Set());
   const [lastPressedKey, setLastPressedKey] = useState<string | null>(null);
@@ -213,10 +215,11 @@ function KeyboardProvider({
     if (!enableHaptics) {
       return;
     }
-    if (navigator.vibrate) {
-      navigator.vibrate(25);
-    }
-  }, [enableHaptics]);
+
+    void trigger([
+      { duration: 25 },
+    ], { intensity: 0.7 })
+  }, [enableHaptics, trigger]);
 
   const pressKey = useCallback(
     (keyCode: string, source: KeyboardEventSource) => {
@@ -356,7 +359,7 @@ function KeyboardLayout() {
   return (
     <div>
       <div className="bg-black/70 border-2 border-black p-3 rounded-[16px] w-fit h-fit">
-        <div className="bg-black/80 border border-[#e5e5e5] border-black rounded-[5px] rounded-t-[8px] h-[278px]">
+        <div className="bg-black/80 border border-black rounded-[5px] rounded-t-[8px] h-[278px]">
           <div className="-space-y-1 -translate-y-1 rounded-[5px] overflow-hidden">
             <Row>
               <Key keyCode={KEYCODE.Escape}>
@@ -694,7 +697,7 @@ function Key({
     >
       <div
         className={cn(
-          "relative overflow-hidden h-[50px] rounded-[4px] rounded-t-[12px] border border-[#e5e5e5] border-black/40 flex items-start justify-center transition-all duration-100",
+          "relative overflow-hidden h-[50px] rounded-[4px] rounded-t-[12px] border border-black/40 flex items-start justify-center transition-all duration-100",
           isPressed && "h-[45px]",
         )}
         style={{
@@ -704,7 +707,7 @@ function Key({
       >
         <div
           className={cn(
-            "relative z-10 h-[37px] rounded-[6px] border border-[#e5e5e5] border-t-0 border-black/40 transition-all duration-100",
+            "relative z-10 h-[37px] rounded-[6px] border border-t-0 border-black/40 transition-all duration-100",
             "text-[9px] font-medium flex flex-col items-center justify-between p-1 gap-0.5 select-none",
             className,
           )}
@@ -734,95 +737,93 @@ function Key({
   );
 }
 
-export const KEYCODE = {
-  Escape: "Escape",
-  F1: "F1",
-  F2: "F2",
-  F3: "F3",
-  F4: "F4",
-  F5: "F5",
-  F6: "F6",
-  F7: "F7",
-  F8: "F8",
-  F9: "F9",
-  F10: "F10",
-  F11: "F11",
-  F12: "F12",
-  F13: "F13",
-  Delete: "Delete",
-  F14: "F14",
-  Backquote: "Backquote",
-  Digit1: "Digit1",
-  Digit2: "Digit2",
-  Digit3: "Digit3",
-  Digit4: "Digit4",
-  Digit5: "Digit5",
-  Digit6: "Digit6",
-  Digit7: "Digit7",
-  Digit8: "Digit8",
-  Digit9: "Digit9",
-  Digit0: "Digit0",
-  Minus: "Minus",
-  Equal: "Equal",
-  Backspace: "Backspace",
-  PageUp: "PageUp",
-  Tab: "Tab",
-  KeyQ: "KeyQ",
-  KeyW: "KeyW",
-  KeyE: "KeyE",
-  KeyR: "KeyR",
-  KeyT: "KeyT",
-  KeyY: "KeyY",
-  KeyU: "KeyU",
-  KeyI: "KeyI",
-  KeyO: "KeyO",
-  KeyP: "KeyP",
-  BracketLeft: "BracketLeft",
-  BracketRight: "BracketRight",
-  Backslash: "Backslash",
-  PageDown: "PageDown",
-  CapsLock: "CapsLock",
-  KeyA: "KeyA",
-  KeyS: "KeyS",
-  KeyD: "KeyD",
-  KeyF: "KeyF",
-  KeyG: "KeyG",
-  KeyH: "KeyH",
-  KeyJ: "KeyJ",
-  KeyK: "KeyK",
-  KeyL: "KeyL",
-  Semicolon: "Semicolon",
-  Quote: "Quote",
-  Enter: "Enter",
-  Home: "Home",
-  ShiftLeft: "ShiftLeft",
-  KeyZ: "KeyZ",
-  KeyX: "KeyX",
-  KeyC: "KeyC",
-  KeyV: "KeyV",
-  KeyB: "KeyB",
-  KeyN: "KeyN",
-  KeyM: "KeyM",
-  Comma: "Comma",
-  Period: "Period",
-  Slash: "Slash",
-  ShiftRight: "ShiftRight",
-  ArrowUp: "ArrowUp",
-  End: "End",
-  ControlLeft: "ControlLeft",
-  AltLeft: "AltLeft",
-  MetaLeft: "MetaLeft",
-  Space: "Space",
-  MetaRight: "MetaRight",
-  Fn: "Fn",
-  ControlRight: "ControlRight",
-  ArrowLeft: "ArrowLeft",
-  ArrowDown: "ArrowDown",
-  ArrowRight: "ArrowRight",
-  AltRight: "AltRight",
-} as const;
-
-export type KEYCODE = typeof KEYCODE[keyof typeof KEYCODE];
+export enum KEYCODE {
+  Escape = "Escape",
+  F1 = "F1",
+  F2 = "F2",
+  F3 = "F3",
+  F4 = "F4",
+  F5 = "F5",
+  F6 = "F6",
+  F7 = "F7",
+  F8 = "F8",
+  F9 = "F9",
+  F10 = "F10",
+  F11 = "F11",
+  F12 = "F12",
+  F13 = "F13",
+  Delete = "Delete",
+  F14 = "F14",
+  Backquote = "Backquote",
+  Digit1 = "Digit1",
+  Digit2 = "Digit2",
+  Digit3 = "Digit3",
+  Digit4 = "Digit4",
+  Digit5 = "Digit5",
+  Digit6 = "Digit6",
+  Digit7 = "Digit7",
+  Digit8 = "Digit8",
+  Digit9 = "Digit9",
+  Digit0 = "Digit0",
+  Minus = "Minus",
+  Equal = "Equal",
+  Backspace = "Backspace",
+  PageUp = "PageUp",
+  Tab = "Tab",
+  KeyQ = "KeyQ",
+  KeyW = "KeyW",
+  KeyE = "KeyE",
+  KeyR = "KeyR",
+  KeyT = "KeyT",
+  KeyY = "KeyY",
+  KeyU = "KeyU",
+  KeyI = "KeyI",
+  KeyO = "KeyO",
+  KeyP = "KeyP",
+  BracketLeft = "BracketLeft",
+  BracketRight = "BracketRight",
+  Backslash = "Backslash",
+  PageDown = "PageDown",
+  CapsLock = "CapsLock",
+  KeyA = "KeyA",
+  KeyS = "KeyS",
+  KeyD = "KeyD",
+  KeyF = "KeyF",
+  KeyG = "KeyG",
+  KeyH = "KeyH",
+  KeyJ = "KeyJ",
+  KeyK = "KeyK",
+  KeyL = "KeyL",
+  Semicolon = "Semicolon",
+  Quote = "Quote",
+  Enter = "Enter",
+  Home = "Home",
+  ShiftLeft = "ShiftLeft",
+  KeyZ = "KeyZ",
+  KeyX = "KeyX",
+  KeyC = "KeyC",
+  KeyV = "KeyV",
+  KeyB = "KeyB",
+  KeyN = "KeyN",
+  KeyM = "KeyM",
+  Comma = "Comma",
+  Period = "Period",
+  Slash = "Slash",
+  ShiftRight = "ShiftRight",
+  ArrowUp = "ArrowUp",
+  End = "End",
+  ControlLeft = "ControlLeft",
+  AltLeft = "AltLeft",
+  MetaLeft = "MetaLeft",
+  Space = "Space",
+  MetaRight = "MetaRight",
+  Fn = "Fn",
+  ControlRight = "ControlRight",
+  ArrowLeft = "ArrowLeft",
+  ArrowDown = "ArrowDown",
+  ArrowRight = "ArrowRight",
+  AltRight = "AltRight",
+}
 
 type KeyVariantSlot = "accent" | "dark" | "light";
 
