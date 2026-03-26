@@ -2,14 +2,16 @@
 
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { PrismLight as SyntaxHighlighter } from "react-syntax-highlighter";
-import tsx from "react-syntax-highlighter/dist/esm/languages/prism/tsx";
-import { coy } from "react-syntax-highlighter/dist/esm/styles/prism";
+import { Light as SyntaxHighlighter } from "react-syntax-highlighter";
+import tsx from "react-syntax-highlighter/dist/esm/languages/hljs/typescript";
+import bash from "react-syntax-highlighter/dist/esm/languages/hljs/bash";
+import { github, githubGist } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import Keyboard from "./components/ui/keyboard";
 import "./index.css";
 import { Maximize2, Copy, Check } from "lucide-react";
 
 SyntaxHighlighter.registerLanguage("tsx", tsx);
+SyntaxHighlighter.registerLanguage("bash", bash);
 
 function CodeBlock({
   code,
@@ -28,17 +30,23 @@ function CodeBlock({
   showLineNumbers?: boolean;
   noRoundedTop?: boolean;
 }) {
+  const isBash = language === "bash";
+  const theme = isBash ? github : githubGist;
+  
   return (
-    <div className={`relative bg-neutral-50/50 border border-transparent ring ring-neutral-200  rounded-xl p-0 overflow-hidden ${noRoundedTop ? 'rounded-t-none' : ''}`}>
+    <div
+      className={`relative bg-neutral-50/50 border border-transparent ring ring-neutral-200  rounded-xl p-0 overflow-hidden ${noRoundedTop ? "rounded-t-none" : ""}`}
+    >
       <SyntaxHighlighter
         language={language}
-        style={coy}
+        style={theme}
         showLineNumbers={showLineNumbers}
         customStyle={{
           margin: 0,
           marginBottom: 0,
           padding: "1rem",
           fontSize: "0.875rem",
+          
         }}
       >
         {code}
@@ -200,9 +208,10 @@ export default function Page() {
               </div>
             </div>
             <p className="text-sm text-neutral-800">
-              2. Download the sound.ogg and place it in your public/sounds/ folder, or just run below commands:
+              2. Download the sound.ogg and place it in your public/sounds/
+              folder, or just run below commands:
             </p>
-              <CodeBlock
+            <CodeBlock
               code={`mkdir -p public/sounds
 curl -L https://keyui.vercel.app/sounds/sound.ogg -o public/sounds/sound.ogg`}
               language="bash"
@@ -211,7 +220,8 @@ curl -L https://keyui.vercel.app/sounds/sound.ogg -o public/sounds/sound.ogg`}
               onCopy={copyToClipboard}
             />
             <p className="text-sm text-neutral-800">
-              3. The keyboard component requires the following dependencies which will be installed automatically by shadcn:
+              3. The keyboard component requires the following dependencies
+              which will be installed automatically by shadcn:
             </p>
             <CodeBlock
               code={`lucide-react - For keyboard icons (already included with shadcn)
@@ -277,12 +287,42 @@ export default function Page() {
               <p>Description</p>
             </div>
             {[
-              ["className", "string", "undefined", "Adds classes to the root keyboard container."],
-              ["theme", '"classic" | "mint" | "royal" | "dolch" | "sand" | "scarlet"', '"classic"', "Selects one of the built-in keyboard themes."],
-              ["enableHaptics", "boolean", "true", "Turns haptic feedback on supported devices on or off."],
-              ["enableSound", "boolean", "true", "Turns mechanical key sound playback on or off."],
-              ["soundUrl", 'string', '"/sounds/sound.ogg"', "Path to the keyboard audio sprite file."],
-              ["onKeyEvent", "(event: KeyboardInteractionEvent) => void", "undefined", "Fires on every key down/up from physical or pointer input."],
+              [
+                "className",
+                "string",
+                "undefined",
+                "Adds classes to the root keyboard container.",
+              ],
+              [
+                "theme",
+                '"classic" | "mint" | "royal" | "dolch" | "sand" | "scarlet"',
+                '"classic"',
+                "Selects one of the built-in keyboard themes.",
+              ],
+              [
+                "enableHaptics",
+                "boolean",
+                "true",
+                "Turns haptic feedback on supported devices on or off.",
+              ],
+              [
+                "enableSound",
+                "boolean",
+                "true",
+                "Turns mechanical key sound playback on or off.",
+              ],
+              [
+                "soundUrl",
+                "string",
+                '"/sounds/sound.ogg"',
+                "Path to the keyboard audio sprite file.",
+              ],
+              [
+                "onKeyEvent",
+                "(event: KeyboardInteractionEvent) => void",
+                "undefined",
+                "Fires on every key down/up from physical or pointer input.",
+              ],
             ].map(([prop, type, defaultVal, desc], i) => (
               <div
                 key={i}
@@ -304,9 +344,21 @@ export default function Page() {
               <p>Description</p>
             </div>
             {[
-              ["code", "string", "KeyboardEvent code, for example KeyA, Enter, ArrowLeft."],
-              ["phase", '"down" | "up"', "Whether the interaction is key press or key release."],
-              ["source", '"physical" | "pointer"', "Physical keyboard event or key click/touch on UI."],
+              [
+                "code",
+                "string",
+                "KeyboardEvent code, for example KeyA, Enter, ArrowLeft.",
+              ],
+              [
+                "phase",
+                '"down" | "up"',
+                "Whether the interaction is key press or key release.",
+              ],
+              [
+                "source",
+                '"physical" | "pointer"',
+                "Physical keyboard event or key click/touch on UI.",
+              ],
             ].map(([prop, type, desc], i) => (
               <div
                 key={i}
