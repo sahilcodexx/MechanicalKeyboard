@@ -59,7 +59,7 @@ export function Keyboard({
   className,
   theme = "classic",
   enableSound = true,
-  enableHaptics = true,
+  enableHaptics = false,
   soundUrl = "/sounds/sound.ogg",
   onKeyEvent,
 }: KeyboardProps) {
