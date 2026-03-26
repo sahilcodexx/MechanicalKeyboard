@@ -2,27 +2,27 @@
 /* eslint-disable react-refresh/only-export-components */
 import { cn } from "@/lib/utils";
 import {
-  IconArrowNarrowLeft,
-  IconBrightnessDown,
-  IconBrightnessUp,
-  IconBulb,
-  IconChevronDown,
-  IconChevronLeft,
-  IconChevronRight,
-  IconChevronUp,
-  IconCommand,
-  IconFrame,
-  IconLayoutDashboard,
-  IconMicrophone,
-  IconMoon,
-  IconPlayerSkipForward,
-  IconPlayerTrackNext,
-  IconPlayerTrackPrev,
-  IconSearch,
-  IconVolume,
-  IconVolume2,
-  IconVolume3,
-} from "@tabler/icons-react";
+  ArrowLeft,
+  SunDim,
+  Sun,
+  Lightbulb,
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  ChevronUp,
+  Command,
+  LayoutGrid,
+  Mic,
+  Moon,
+  SkipForward,
+  CirclePlay,
+  CircleChevronLeft,
+  Search,
+  VolumeX,
+  Volume1,
+  Volume2,
+  Maximize2,
+} from "lucide-react";
 import {
   createContext,
   useCallback,
@@ -367,64 +367,64 @@ function KeyboardLayout() {
               </Key>
 
               <Key keyCode={KEYCODE.F1}>
-                <IconBrightnessDown className="size-[10px]" />
+                <SunDim className="size-[10px]" />
                 <span>{"F1"}</span>
               </Key>
               <Key keyCode={KEYCODE.F2}>
-                <IconBrightnessUp className="size-[10px]" />
+                <Sun className="size-[10px]" />
                 <span>{"F2"}</span>
               </Key>
               <Key keyCode={KEYCODE.F3}>
-                <IconLayoutDashboard className="size-[10px]" />
+                <LayoutGrid className="size-[10px]" />
                 <span>{"F3"}</span>
               </Key>
               <Key keyCode={KEYCODE.F4}>
-                <IconSearch className="size-[10px]" />
+                <Search className="size-[10px]" />
                 <span>{"F4"}</span>
               </Key>
 
               <Key keyCode={KEYCODE.F5}>
-                <IconMicrophone className="size-[10px]" />
+                <Mic className="size-[10px]" />
                 <span>{"F5"}</span>
               </Key>
               <Key keyCode={KEYCODE.F6}>
-                <IconMoon className="size-[10px]" />
+                <Moon className="size-[10px]" />
                 <span>{"F6"}</span>
               </Key>
               <Key keyCode={KEYCODE.F7}>
-                <IconPlayerTrackPrev className="size-[10px]" />
+                <CircleChevronLeft className="size-[10px]" />
                 <span>{"F7"}</span>
               </Key>
               <Key keyCode={KEYCODE.F8}>
-                <IconPlayerSkipForward className="size-[10px]" />
+                <SkipForward className="size-[10px]" />
                 <span>{"F8"}</span>
               </Key>
               <Key keyCode={KEYCODE.F9}>
-                <IconPlayerTrackNext className="size-[10px]" />
+                <CirclePlay className="size-[10px]" />
                 <span>{"F9"}</span>
               </Key>
 
               <Key keyCode={KEYCODE.F10}>
-                <IconVolume3 className="size-[10px]" />
+                <VolumeX className="size-[10px]" />
                 <span>{"F10"}</span>
               </Key>
               <Key keyCode={KEYCODE.F11}>
-                <IconVolume2 className="size-[10px]" />
+                <Volume1 className="size-[10px]" />
                 <span>{"F11"}</span>
               </Key>
               <Key keyCode={KEYCODE.F12}>
-                <IconVolume className="size-[10px]" />
+                <Volume2 className="size-[10px]" />
                 <span>{"F12"}</span>
               </Key>
 
               <Key keyCode={KEYCODE.F13}>
-                <IconFrame className="size-[10px]" />
+                <Maximize2 className="size-[10px]" />
               </Key>
               <Key keyCode={KEYCODE.Delete}>
                 {"del"}
               </Key>
               <Key keyCode={KEYCODE.F14}>
-                <IconBulb className="size-[12px]" />
+                <Lightbulb className="size-[12px]" />
               </Key>
             </Row>
 
@@ -486,7 +486,7 @@ function KeyboardLayout() {
               </Key>
 
               <Key keyCode={KEYCODE.Backspace} width={100}>
-                <IconArrowNarrowLeft className="size-[12px]" />
+                <ArrowLeft className="size-[12px]" />
               </Key>
               <Key keyCode={KEYCODE.PageUp}>
                 {"pgup"}
@@ -592,7 +592,7 @@ function KeyboardLayout() {
                 {"shift"}
               </Key>
               <Key keyCode={KEYCODE.ArrowUp}>
-                <IconChevronUp className="size-[12px]" />
+                <ChevronUp className="size-[12px]" />
               </Key>
               <Key keyCode={KEYCODE.End}>
                 {"end"}
@@ -607,13 +607,13 @@ function KeyboardLayout() {
                 {"option"}
               </Key>
               <Key keyCode={KEYCODE.MetaLeft} width={62}>
-                <IconCommand className="size-[12px]" />
+                <Command className="size-[12px]" />
               </Key>
 
               <Key keyCode={KEYCODE.Space} width={314} />
 
               <Key keyCode={KEYCODE.MetaRight}>
-                <IconCommand className="size-[12px]" />
+                <Command className="size-[12px]" />
               </Key>
               <Key keyCode={KEYCODE.Fn}>
                 {"fn"}
@@ -622,13 +622,13 @@ function KeyboardLayout() {
                 {"ctrl"}
               </Key>
               <Key keyCode={KEYCODE.ArrowLeft}>
-                <IconChevronLeft className="size-[12px]" />
+                <ChevronLeft className="size-[12px]" />
               </Key>
               <Key keyCode={KEYCODE.ArrowDown}>
-                <IconChevronDown className="size-[12px]" />
+                <ChevronDown className="size-[12px]" />
               </Key>
               <Key keyCode={KEYCODE.ArrowRight}>
-                <IconChevronRight className="size-[12px]" />
+                <ChevronRight className="size-[12px]" />
               </Key>
             </Row>
           </div>

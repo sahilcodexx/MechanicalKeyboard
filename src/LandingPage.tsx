@@ -7,7 +7,7 @@ import tsx from "react-syntax-highlighter/dist/esm/languages/prism/tsx";
 import { coy } from "react-syntax-highlighter/dist/esm/styles/prism";
 import Keyboard from "./components/ui/keyboard";
 import "./index.css";
-import { IconMaximize, IconCopy, IconCheck } from "@tabler/icons-react";
+import { Maximize2, Copy, Check } from "lucide-react";
 
 SyntaxHighlighter.registerLanguage("tsx", tsx);
 
@@ -29,13 +29,14 @@ function CodeBlock({
   noRoundedTop?: boolean;
 }) {
   return (
-    <div className={`relative bg-neutral-50/50 border border-transparent ring ring-neutral-200  rounded-xl overflow-hidden ${noRoundedTop ? 'rounded-t-none' : ''}`}>
+    <div className={`relative bg-neutral-50/50 border border-transparent ring ring-neutral-200  rounded-xl p-0 overflow-hidden ${noRoundedTop ? 'rounded-t-none' : ''}`}>
       <SyntaxHighlighter
         language={language}
         style={coy}
         showLineNumbers={showLineNumbers}
         customStyle={{
           margin: 0,
+          marginBottom: 0,
           padding: "1rem",
           fontSize: "0.875rem",
         }}
@@ -49,9 +50,9 @@ function CodeBlock({
           aria-label="Copy"
         >
           {copiedId === id ? (
-            <IconCheck size={14} className="text-black" />
+            <Check size={14} className="text-black" />
           ) : (
-            <IconCopy size={14} />
+            <Copy size={14} />
           )}
         </button>
       )}
@@ -98,9 +99,9 @@ function Tabs({
           aria-label="Copy"
         >
           {copiedId === id ? (
-            <IconCheck size={14} className="text-black" />
+            <Check size={14} className="text-black" />
           ) : (
-            <IconCopy size={14} />
+            <Copy size={14} />
           )}
         </button>
       </div>
@@ -111,10 +112,10 @@ function Tabs({
 const packageManagers = ["pnpm", "yarn", "npm", "bun"] as const;
 
 const installCommands: Record<(typeof packageManagers)[number], string> = {
-  pnpm: "pnpm dlx shadcn@latest add https://keyb.himan.me/r/keyboard.json",
-  yarn: "yarn dlx shadcn@latest add https://keyb.himan.me/r/keyboard.json",
-  npm: "npx shadcn@latest add https://keyb.himan.me/r/keyboard.json",
-  bun: "bunx shadcn@latest add https://keyb.himan.me/r/keyboard.json",
+  pnpm: "pnpm dlx shadcn@latest add https://keyui.vercel.app/r/keyboard.json",
+  yarn: "yarn dlx shadcn@latest add https://keyui.vercel.app/r/keyboard.json",
+  npm: "npx shadcn@latest add https://keyui.vercel.app/r/keyboard.json",
+  bun: "bunx shadcn@latest add https://keyui.vercel.app/r/keyboard.json",
 };
 
 export default function LandingPage() {
@@ -152,7 +153,7 @@ export default function LandingPage() {
               to="/preview"
               className="absolute top-2 right-2 p-1 border border-neutral-300 hover:bg-neutral-100 rounded-lg text-xs font-medium"
             >
-              <IconMaximize size={14} />
+              <Maximize2 size={14} />
             </Link>
           </div>
           <CodeBlock
@@ -201,11 +202,22 @@ export default function Page() {
             <p className="text-sm text-neutral-800">
               2. Download the sound.ogg and place it in your public/sounds/ folder, or just run below commands:
             </p>
-            <CodeBlock
+              <CodeBlock
               code={`mkdir -p public/sounds
-curl -L https://keyb.himan.me/sounds/sound.ogg -o public/sounds/sound.ogg`}
+curl -L https://keyui.vercel.app/sounds/sound.ogg -o public/sounds/sound.ogg`}
               language="bash"
               id="sound"
+              copiedId={copied}
+              onCopy={copyToClipboard}
+            />
+            <p className="text-sm text-neutral-800">
+              3. The keyboard component requires the following dependencies which will be installed automatically by shadcn:
+            </p>
+            <CodeBlock
+              code={`lucide-react - For keyboard icons (already included with shadcn)
+web-haptics - For haptic feedback on supported devices`}
+              language="bash"
+              id="deps"
               copiedId={copied}
               onCopy={copyToClipboard}
             />
