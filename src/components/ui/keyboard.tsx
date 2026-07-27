@@ -1,6 +1,7 @@
 'use client';
 /* eslint-disable react-refresh/only-export-components */
 import { cn } from "@/lib/utils";
+import { motion, AnimatePresence } from "motion/react";
 import {
   ArrowLeft,
   SunDim,
@@ -52,6 +53,7 @@ export interface KeyboardProps {
   enableHaptics?: boolean;
   enableSound?: boolean;
   soundUrl?: string;
+  showPreview?: boolean;
   onKeyEvent?: (event: KeyboardInteractionEvent) => void;
 }
 
@@ -61,6 +63,7 @@ export function Keyboard({
   enableSound = true,
   enableHaptics = false,
   soundUrl = "/sounds/sound.ogg",
+  showPreview = true,
   onKeyEvent,
 }: KeyboardProps) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -74,9 +77,7 @@ export function Keyboard({
       soundUrl={soundUrl}
       onKeyEvent={onKeyEvent}
     >
-      <div ref={containerRef} className={cn("inline-block", className)}>
-        <KeyboardLayout />
-      </div>
+      <KeyboardContent className={className} showPreview={showPreview} />
     </KeyboardProvider>
   );
 }
@@ -87,6 +88,8 @@ interface KeyboardContextType {
   themeName: KeyboardThemeName;
   pressedKeys: Set<string>;
   lastPressedKey: string | null;
+  displayLabel: string | null;
+  animKey: number;
   triggerPointerHaptic: () => void;
   pressKey: (keyCode: string, source: KeyboardEventSource) => void;
   releaseKey: (keyCode: string, source: KeyboardEventSource) => void;
@@ -129,6 +132,9 @@ function KeyboardProvider({
 
   const [pressedKeys, setPressedKeys] = useState<Set<string>>(new Set());
   const [lastPressedKey, setLastPressedKey] = useState<string | null>(null);
+  const [displayLabel, setDisplayLabel] = useState<string | null>(null);
+  const [animKey, setAnimKey] = useState<number>(0);
+  const clearTimerRef = useRef<NodeJS.Timeout | null>(null);
   const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
@@ -233,6 +239,12 @@ function KeyboardProvider({
       setPressedKeys(next);
 
       setLastPressedKey(keyCode);
+      const label = getDisplayLabel(keyCode);
+      if (label) {
+        if (clearTimerRef.current) clearTimeout(clearTimerRef.current);
+        setDisplayLabel(label);
+        setAnimKey((prev) => prev + 1);
+      }
       playSound("down", keyCode);
       emitKeyEvent("down", keyCode, source);
     },
@@ -249,6 +261,13 @@ function KeyboardProvider({
       next.delete(keyCode);
       pressedKeysRef.current = next;
       setPressedKeys(next);
+
+      if (next.size === 0) {
+        if (clearTimerRef.current) clearTimeout(clearTimerRef.current);
+        clearTimerRef.current = setTimeout(() => {
+          setDisplayLabel(null);
+        }, 900);
+      }
 
       playSound("up", keyCode);
       emitKeyEvent("up", keyCode, source);
@@ -344,6 +363,8 @@ function KeyboardProvider({
         themeName: theme,
         pressedKeys,
         lastPressedKey,
+        displayLabel,
+        animKey,
         triggerPointerHaptic,
         pressKey,
         releaseKey,
@@ -353,6 +374,99 @@ function KeyboardProvider({
       {children}
     </KeyboardContext.Provider>
   );
+}
+
+function KeyboardContent({ className, showPreview }: { className?: string; showPreview: boolean }) {
+  const { displayLabel, animKey, pressedKeys } = useKeyboardContext();
+
+  return (
+    <div className="flex flex-col items-center select-none w-full max-w-5xl gap-4">
+      {/* Floating Keystroke Text Badge */}
+      {showPreview && (
+        <div className="relative flex h-12 w-full items-center justify-center">
+          <AnimatePresence mode="popLayout">
+            {displayLabel && (
+              <motion.div
+                key={animKey}
+                layout
+                initial={{ opacity: 0, scale: 0.6, y: 8 }}
+                animate={{
+                  opacity: 1,
+                  scale: pressedKeys.size > 0 ? 0.95 : 1,
+                  y: 0,
+                }}
+                exit={{ opacity: 0, scale: 0.8, y: -8 }}
+                transition={{
+                  type: "spring",
+                  stiffness: 500,
+                  damping: 28,
+                  mass: 0.5,
+                }}
+                className="absolute flex items-center justify-center font-mono text-3xl font-medium tracking-tight text-neutral-600 dark:text-neutral-300"
+              >
+                <motion.span
+                  initial={{ opacity: 0, filter: "blur(6px)" }}
+                  animate={{ opacity: 1, filter: "blur(0px)" }}
+                  transition={{ duration: 0.1 }}
+                >
+                  {displayLabel}
+                </motion.span>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      )}
+
+      <div className={cn("inline-block", className)}>
+        <KeyboardLayout />
+      </div>
+    </div>
+  );
+}
+
+function getDisplayLabel(code: string | null): string | null {
+  if (!code) return null;
+  const map: Record<string, string> = {
+    Escape: "esc",
+    Space: "space",
+    Backspace: "backspace",
+    Enter: "return",
+    Tab: "tab",
+    CapsLock: "caps lock",
+    ShiftLeft: "shift",
+    ShiftRight: "shift",
+    ControlLeft: "ctrl",
+    ControlRight: "ctrl",
+    AltLeft: "option",
+    AltRight: "option",
+    MetaLeft: "command",
+    MetaRight: "command",
+    ArrowUp: "↑",
+    ArrowDown: "↓",
+    ArrowLeft: "←",
+    ArrowRight: "→",
+    Delete: "del",
+    PageUp: "pgup",
+    PageDown: "pgdn",
+    Home: "home",
+    End: "end",
+    Backquote: "`",
+    Minus: "-",
+    Equal: "=",
+    BracketLeft: "[",
+    BracketRight: "]",
+    Backslash: "\\",
+    Semicolon: ";",
+    Quote: "'",
+    Comma: ",",
+    Period: ".",
+    Slash: "/",
+  };
+
+  if (map[code]) return map[code];
+  if (code.startsWith("Key")) return code.replace("Key", "").toLowerCase();
+  if (code.startsWith("Digit")) return code.replace("Digit", "");
+  return code.toLowerCase();
 }
 
 function KeyboardLayout() {
