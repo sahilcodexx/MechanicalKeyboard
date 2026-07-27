@@ -64,7 +64,7 @@ export default function HomePage() {
                 isDark ? "bg-[#141418]" : "bg-white"
               }`}
             >
-              <div className="transform scale-[0.88] sm:scale-[1.05] md:scale-[1.18] origin-center">
+              <div className="transform scale-[0.44] xs:scale-[0.54] sm:scale-[0.7] md:scale-[0.84] lg:scale-[0.95] xl:scale-[1.05] origin-center max-w-full">
                 <CustomKeyboard theme={isDark ? "dark" : "light"} enableSound={false} showPreview={false} />
               </div>
 
@@ -93,7 +93,7 @@ export default function HomePage() {
                 isDark ? "bg-[#141418]" : "bg-white"
               }`}
             >
-              <div className="transform scale-[0.55] sm:scale-[0.68] md:scale-[0.75] origin-center">
+              <div className="transform scale-[0.34] xs:scale-[0.42] sm:scale-[0.54] md:scale-[0.66] lg:scale-[0.76] xl:scale-[0.84] origin-center max-w-full">
                 <Keyboard theme="classic" enableSound={false} enableHaptics={false} />
               </div>
 
