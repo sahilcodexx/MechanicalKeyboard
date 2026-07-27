@@ -548,7 +548,7 @@ export function CustomKeyboard({
         )}
 
         {/* Keyboard Chassis with Light (Silver) & Dark (Space Black) Theme Support */}
-        <div className="mx-auto w-fit [zoom:1] sm:[zoom:1.3] md:[zoom:1.5]">
+        <div className="mx-auto w-fit flex items-center justify-center">
           <div
             className={cn(
               "h-full w-fit rounded-[10px] p-1 shadow-xl",
@@ -875,14 +875,14 @@ const Key = ({
   };
 
   return (
-    <div className={cn("rounded-[4px] p-[0.5px]", containerClassName)}>
+    <div className={cn("relative rounded-[4px] p-[0.5px]", containerClassName)}>
       <button
         type="button"
         onMouseDown={handleMouseDown}
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseLeave}
         className={cn(
-          "flex h-6 w-6 cursor-pointer items-center justify-center rounded-[3.5px] transition-transform duration-75 active:scale-[0.98]",
+          "relative flex h-6 w-6 cursor-pointer items-center justify-center rounded-[3.5px] transition-transform duration-75 active:scale-[0.98]",
           // Light vs Dark Theme keycap styles
           isDarkTheme
             ? "bg-[#28282c] text-white shadow-[0px_0px_1px_0px_rgba(0,0,0,0.8),0px_1px_1px_0px_rgba(0,0,0,0.4),0px_1px_0px_0px_rgba(255,255,255,0.08)_inset]"
@@ -898,8 +898,8 @@ const Key = ({
         {hasLed && (
           <div
             className={cn(
-              "absolute left-1 top-1 h-1 w-1 rounded-full",
-              isCapsActive ? "bg-emerald-500 shadow-[0_0_4px_rgba(16,185,129,0.9)]" : (isDarkTheme ? "bg-white/20" : "bg-neutral-900/20 dark:bg-white/20")
+              "absolute left-[2px] top-[2px] h-[2.5px] w-[2.5px] rounded-full z-10 pointer-events-none transition-colors",
+              isCapsActive ? "bg-emerald-400 shadow-[0_0_3px_#10b981]" : (isDarkTheme ? "bg-white/20" : "bg-neutral-900/20 dark:bg-white/20")
             )}
           />
         )}

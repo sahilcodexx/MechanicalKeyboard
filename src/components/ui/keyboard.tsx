@@ -134,7 +134,7 @@ function KeyboardProvider({
   const [lastPressedKey, setLastPressedKey] = useState<string | null>(null);
   const [displayLabel, setDisplayLabel] = useState<string | null>(null);
   const [animKey, setAnimKey] = useState<number>(0);
-  const clearTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const clearTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
