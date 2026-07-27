@@ -48,20 +48,20 @@ export default function PreviewPage() {
       </div>
 
       {/* Main Full Preview Area */}
-      <div className="w-full flex-1 flex items-center justify-center my-auto py-4 overflow-hidden">
+      <div className="w-full flex-1 flex items-center justify-center my-auto py-4 overflow-hidden max-w-full">
         {type === "keychron" ? (
-          <div className="transform scale-90 sm:scale-105 md:scale-115 lg:scale-125 transition-transform">
+          <div className="transform scale-[0.5] sm:scale-[0.68] md:scale-[0.85] lg:scale-[1.0] xl:scale-[1.12] 2xl:scale-[1.25] transition-transform origin-center">
             <Keyboard theme={selectedKbTheme} enableSound={true} enableHaptics={true} showPreview={true} />
           </div>
         ) : (
-          <div className="transform scale-[0.95] sm:scale-[1.1] md:scale-[1.25] lg:scale-[1.35] transition-transform">
+          <div className="transform scale-[0.55] sm:scale-[0.72] md:scale-[0.88] lg:scale-[1.05] xl:scale-[1.2] 2xl:scale-[1.32] transition-transform origin-center">
             <CustomKeyboard theme={siteTheme} enableSound={true} showPreview={true} />
           </div>
         )}
       </div>
 
-      {/* Controls & Theme Selectors */}
-      <div className="flex flex-col items-center gap-4 mb-2 z-10">
+      {/* Controls, Theme Selectors & Credits */}
+      <div className="flex flex-col items-center gap-3 mb-6 pb-2 z-10 text-center max-w-xl px-4">
         {type === "keychron" ? (
           <div
             className={`inline-flex items-center rounded-full border p-1 shadow-lg overflow-x-auto ${
@@ -111,18 +111,25 @@ export default function PreviewPage() {
           </div>
         )}
 
-        {/* Footer */}
-        <footer className="text-xs text-neutral-500">
-          made by{" "}
-          <a
-            href="https://x.com/sahilcodex"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="font-medium hover:underline"
-          >
-            sahilcodex
-          </a>
-        </footer>
+        {/* Attribution & Credits (Only for Mechanical Keyboard) */}
+        {type === "keychron" && (
+          <footer className={`text-[11px] leading-relaxed space-y-0.5 mt-2 ${isDark ? "text-neutral-400" : "text-neutral-600"}`}>
+            <p>
+              This UI was created based on reference designs using Claude and custom CSS to match.
+            </p>
+            <p>
+              Original concept by{" "}
+              <a
+                href="https://x.com/himanhacks"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`font-semibold hover:underline ${isDark ? "text-white" : "text-black"}`}
+              >
+                @himanhacks
+              </a>
+            </p>
+          </footer>
+        )}
       </div>
     </div>
   );
