@@ -6,13 +6,13 @@ import Keyboard, { type KeyboardThemeName } from "../components/ui/keyboard";
 import {
   Copy,
   Check,
-  ChevronDown,
   Maximize2,
   RotateCcw,
   Sun,
   Moon,
   Volume2,
   VolumeX,
+  Smartphone,
   ArrowLeft,
 } from "lucide-react";
 import { useSiteTheme } from "../context/ThemeContext";
@@ -92,9 +92,9 @@ export default function Keyboard({ theme = "classic", enableSound = true, enable
     >
       {/* Main Responsive Split Layout */}
       <div className="w-full flex-1 flex flex-col lg:flex-row items-start min-h-screen">
-        {/* Left Documentation Pane */}
+        {/* Left Documentation Pane - SECOND ON MOBILE (order-2 lg:order-1) */}
         <div
-          className={`w-full lg:w-1/2 overflow-y-auto border-r p-6 md:p-10 lg:pl-16 flex justify-start ${
+          className={`order-2 lg:order-1 w-full lg:w-1/2 overflow-y-auto border-r p-6 md:p-10 lg:pl-16 flex justify-start ${
             isDark ? "border-neutral-800/80 bg-[#0e0e11]" : "border-neutral-200/80 bg-white"
           }`}
         >
@@ -124,20 +124,6 @@ export default function Keyboard({ theme = "classic", enableSound = true, enable
               <p className={`text-sm leading-relaxed ${isDark ? "text-neutral-400" : "text-neutral-600"}`}>
                 A Keychron K2 inspired 75% mechanical keyboard component with 6 built-in keycap color themes, optional web haptics, and mechanical switch audio sprite playback.
               </p>
-
-              <div className="pt-1">
-                <button
-                  onClick={() => copyToClipboard("# Keychron K2 Keyboard Component Documentation", "doc-md")}
-                  className={`inline-flex items-center gap-2 rounded-lg border px-3 py-1.5 text-xs ${
-                    isDark
-                      ? "border-neutral-800 bg-[#121215] text-neutral-300 hover:bg-neutral-800 hover:text-white"
-                      : "border-neutral-300 bg-neutral-100 text-neutral-700 hover:bg-neutral-200 hover:text-black"
-                  }`}
-                >
-                  <span>Copy as Markdown</span>
-                  <ChevronDown className="h-3.5 w-3.5 opacity-60" />
-                </button>
-              </div>
             </div>
 
             {/* Installation Section */}
@@ -481,9 +467,9 @@ export default function Keyboard({ theme = "classic", enableSound = true, enable
           </div>
         </div>
 
-        {/* Right Live Interactive Preview Canvas Pane */}
+        {/* Right Live Interactive Preview Canvas Pane - FIRST ON MOBILE (order-1 lg:order-2) */}
         <div
-          className={`w-full lg:w-1/2 lg:sticky lg:top-0 lg:h-screen flex flex-col items-center justify-between p-6 lg:p-12 relative min-h-[500px] ${
+          className={`order-1 lg:order-2 w-full lg:w-1/2 lg:sticky lg:top-0 lg:h-screen flex flex-col items-center justify-between p-4 sm:p-6 lg:p-12 relative min-h-[420px] sm:min-h-[500px] overflow-hidden ${
             isDark ? "bg-[#141418]" : "bg-neutral-100"
           }`}
         >
@@ -514,6 +500,21 @@ export default function Keyboard({ theme = "classic", enableSound = true, enable
                 {soundEnabled ? <Volume2 className="h-4 w-4" /> : <VolumeX className="h-4 w-4" />}
               </button>
               <button
+                onClick={() => setHapticsEnabled((prev) => !prev)}
+                className={`p-1.5 rounded-lg border ${
+                  isDark
+                    ? hapticsEnabled
+                      ? "text-purple-400 border-purple-500/30 bg-[#18181c]"
+                      : "text-neutral-500 border-neutral-800 bg-[#18181c] hover:text-neutral-300"
+                    : hapticsEnabled
+                    ? "text-purple-600 border-purple-500/30 bg-white"
+                    : "text-neutral-500 border-neutral-300 bg-white hover:text-neutral-800"
+                }`}
+                title={hapticsEnabled ? "Web Haptics Enabled" : "Web Haptics Disabled"}
+              >
+                <Smartphone className="h-4 w-4" />
+              </button>
+              <button
                 onClick={() => setSiteTheme(isDark ? "light" : "dark")}
                 className={`p-1.5 rounded-lg border ${
                   isDark
@@ -526,8 +527,10 @@ export default function Keyboard({ theme = "classic", enableSound = true, enable
               </button>
               <button
                 onClick={() => {
-                  setSelectedKbTheme("classic");
+                  setSiteTheme("dark");
                   setSoundEnabled(true);
+                  setHapticsEnabled(true);
+                  setSelectedKbTheme("classic");
                 }}
                 className={`p-1.5 rounded-lg border ${
                   isDark
@@ -553,35 +556,52 @@ export default function Keyboard({ theme = "classic", enableSound = true, enable
           </div>
 
           {/* Centered Keyboard Replica */}
-          <div className="my-auto w-full flex items-center justify-center py-10">
-            <div className="transform scale-[0.8] sm:scale-100">
+          <div className="my-auto w-full flex items-center justify-center py-4 overflow-hidden max-w-full">
+            <div className="transform scale-[0.36] xs:scale-[0.44] sm:scale-[0.6] md:scale-[0.72] lg:scale-[0.68] xl:scale-[0.82] 2xl:scale-[0.92] transition-transform origin-center">
               <Keyboard theme={selectedKbTheme} enableSound={soundEnabled} enableHaptics={hapticsEnabled} showPreview={true} />
             </div>
           </div>
 
-          {/* Bottom Keychron Theme Switcher Pill */}
-          <div
-            className={`inline-flex items-center rounded-full border p-1 shadow-lg overflow-x-auto ${
-              isDark ? "border-neutral-800 bg-[#18181c]" : "border-neutral-300 bg-white"
-            }`}
-          >
-            {themes.map((t) => (
-              <button
-                key={t.name}
-                onClick={() => setSelectedKbTheme(t.name)}
-                className={`px-3 py-1.5 text-xs font-medium rounded-full ${
-                  selectedKbTheme === t.name
-                    ? isDark
-                      ? "bg-white text-black shadow-md"
-                      : "bg-neutral-900 text-white shadow-md"
-                    : isDark
-                    ? "text-neutral-400 hover:text-white"
-                    : "text-neutral-500 hover:text-neutral-900"
-                }`}
-              >
-                {t.label}
-              </button>
-            ))}
+          {/* Bottom Keychron Theme Switcher Pill & Attribution */}
+          <div className="flex flex-col items-center gap-3 z-10 text-center max-w-md pb-2">
+            <div
+              className={`inline-flex items-center rounded-full border p-1 shadow-lg overflow-x-auto ${
+                isDark ? "border-neutral-800 bg-[#18181c]" : "border-neutral-300 bg-white"
+              }`}
+            >
+              {themes.map((t) => (
+                <button
+                  key={t.name}
+                  onClick={() => setSelectedKbTheme(t.name)}
+                  className={`px-3 py-1.5 text-xs font-medium rounded-full ${
+                    selectedKbTheme === t.name
+                      ? isDark
+                        ? "bg-white text-black shadow-md"
+                        : "bg-neutral-900 text-white shadow-md"
+                      : isDark
+                      ? "text-neutral-400 hover:text-white"
+                      : "text-neutral-500 hover:text-neutral-900"
+                  }`}
+                >
+                  {t.label}
+                </button>
+              ))}
+            </div>
+
+            <footer className={`text-[11px] leading-relaxed space-y-0.5 ${isDark ? "text-neutral-400" : "text-neutral-600"}`}>
+              <p>This UI was created based on reference designs using Claude and custom CSS to match.</p>
+              <p>
+                Original concept by{" "}
+                <a
+                  href="https://x.com/himanhacks"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`font-semibold hover:underline ${isDark ? "text-white" : "text-black"}`}
+                >
+                  @himanhacks
+                </a>
+              </p>
+            </footer>
           </div>
         </div>
       </div>

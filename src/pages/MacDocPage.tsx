@@ -6,7 +6,6 @@ import CustomKeyboard from "../components/ui/custom-keyboard";
 import {
   Copy,
   Check,
-  ChevronDown,
   Maximize2,
   RotateCcw,
   Sun,
@@ -92,9 +91,9 @@ export function CustomKeyboard({ theme = "dark", enableSound = true }) {
     >
       {/* Main Responsive Split Layout */}
       <div className="w-full flex-1 flex flex-col lg:flex-row items-start min-h-screen">
-        {/* Left Documentation Pane */}
+        {/* Left Documentation Pane - SECOND ON MOBILE (order-2 lg:order-1) */}
         <div
-          className={`w-full lg:w-1/2 overflow-y-auto border-r p-6 md:p-10 lg:pl-16 flex justify-start ${
+          className={`order-2 lg:order-1 w-full lg:w-1/2 overflow-y-auto border-r p-6 md:p-10 lg:pl-16 flex justify-start ${
             isDark ? "border-neutral-800/80 bg-[#0e0e11]" : "border-neutral-200/80 bg-white"
           }`}
         >
@@ -126,20 +125,6 @@ export function CustomKeyboard({ theme = "dark", enableSound = true }) {
                 authentic layout geometry. Features active states for physical key presses and
                 optional sound feedback.
               </p>
-
-              <div className="pt-1">
-                <button
-                  onClick={() => copyToClipboard("# Mac Keyboard Component Documentation", "doc-md")}
-                  className={`inline-flex items-center gap-2 rounded-lg border px-3 py-1.5 text-xs ${
-                    isDark
-                      ? "border-neutral-800 bg-[#121215] text-neutral-300 hover:bg-neutral-800 hover:text-white"
-                      : "border-neutral-300 bg-neutral-100 text-neutral-700 hover:bg-neutral-200 hover:text-black"
-                  }`}
-                >
-                  <span>Copy as Markdown</span>
-                  <ChevronDown className="h-3.5 w-3.5 opacity-60" />
-                </button>
-              </div>
             </div>
 
             {/* Installation Section */}
@@ -513,9 +498,9 @@ export function CustomKeyboard({ theme = "dark", enableSound = true }) {
           </div>
         </div>
 
-        {/* Right Live Interactive Preview Canvas Pane */}
+        {/* Right Live Interactive Preview Canvas Pane - FIRST ON MOBILE (order-1 lg:order-2) */}
         <div
-          className={`w-full lg:w-1/2 lg:sticky lg:top-0 lg:h-screen flex flex-col items-center justify-between p-6 lg:p-12 relative min-h-[500px] overflow-hidden ${
+          className={`order-1 lg:order-2 w-full lg:w-1/2 lg:sticky lg:top-0 lg:h-screen flex flex-col items-center justify-between p-4 sm:p-6 lg:p-12 relative min-h-[420px] sm:min-h-[500px] overflow-hidden ${
             isDark ? "bg-[#141418]" : "bg-neutral-100"
           }`}
         >
@@ -584,9 +569,9 @@ export function CustomKeyboard({ theme = "dark", enableSound = true }) {
             </div>
           </div>
 
-          {/* Centered Keyboard Replica with perfect fit scale */}
-          <div className="my-auto w-full flex items-center justify-center py-2">
-            <div className="transform scale-[0.85] sm:scale-[0.95] md:scale-100 lg:scale-[1.05] transition-transform">
+          {/* Centered Keyboard Replica with perfect fit responsive scale */}
+          <div className="my-auto w-full flex items-center justify-center py-4 overflow-hidden max-w-full">
+            <div className="transform scale-[0.42] xs:scale-[0.5] sm:scale-[0.66] md:scale-[0.78] lg:scale-[0.72] xl:scale-[0.88] 2xl:scale-[0.98] transition-transform origin-center">
               <CustomKeyboard theme={siteTheme} enableSound={soundEnabled} showPreview={true} />
             </div>
           </div>
