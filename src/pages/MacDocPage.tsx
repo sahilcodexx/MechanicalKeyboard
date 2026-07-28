@@ -15,6 +15,7 @@ import {
   ArrowLeft,
 } from "lucide-react";
 import { useSiteTheme } from "../context/ThemeContext";
+import { customKeyboardSourceCode } from "../data/source-codes";
 import "../index.css";
 
 const packageManagers = ["bun", "npm", "pnpm", "yarn"] as const;
@@ -26,6 +27,65 @@ const installCommands: Record<PackageManager, string> = {
   yarn: "yarn dlx shadcn@latest add mac-keyboard",
   bun: "bunx shadcn@latest add mac-keyboard",
 };
+
+function HighlightedCode({ code, isDark }: { code: string; isDark: boolean }) {
+  const lines = code.split("\n");
+  return (
+    <div className="font-mono text-xs leading-relaxed space-y-0.5">
+      {lines.map((line, i) => {
+        const isComment = line.trim().startsWith("//") || line.trim().startsWith("/*");
+        if (isComment) {
+          return (
+            <div key={i} className="text-neutral-500 italic">
+              {line}
+            </div>
+          );
+        }
+        return <div key={i}>{tokenizeLine(line, isDark)}</div>;
+      })}
+    </div>
+  );
+}
+
+function tokenizeLine(line: string, isDark: boolean) {
+  const tokens = line.split(
+    /(".*?"|'.*?'|`.*?`|\b(?:use client|import|export|function|return|const|let|var|type|interface|default|from|extends|null|undefined|true|false)\b|\b(?:React|HTMLAttributes|HTMLDivElement|Set|KeyboardEvent|AudioContext|AudioBuffer|CustomKeyboardProps|CustomKeyboard|Keyboard|KeyboardThemeName|KeyboardContextType|KeyboardProps)\b)/g
+  );
+
+  return tokens.map((token, index) => {
+    if (!token) return null;
+    if (/^(".*?"|'.*?'|`.*?`)$/.test(token)) {
+      return (
+        <span key={index} className={isDark ? "text-emerald-300" : "text-emerald-600"}>
+          {token}
+        </span>
+      );
+    }
+    if (
+      /^\b(use client|import|export|function|return|const|let|var|type|interface|default|from|extends|null|undefined|true|false)\b$/.test(
+        token
+      )
+    ) {
+      return (
+        <span key={index} className={isDark ? "text-purple-400 font-medium" : "text-purple-600 font-medium"}>
+          {token}
+        </span>
+      );
+    }
+    if (
+      /^\b(React|HTMLAttributes|HTMLDivElement|Set|KeyboardEvent|AudioContext|AudioBuffer|CustomKeyboardProps|CustomKeyboard|Keyboard|KeyboardThemeName|KeyboardContextType|KeyboardProps)\b$/.test(
+        token
+      )
+    ) {
+      return (
+        <span key={index} className={isDark ? "text-cyan-300" : "text-cyan-600"}>
+          {token}
+        </span>
+      );
+    }
+    return <span key={index}>{token}</span>;
+  });
+}
 
 export default function MacDocPage() {
   const [installTab, setInstallTab] = useState<"cli" | "manual">("cli");
@@ -63,25 +123,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }`;
 
-  const manualSourceCode = `"use client";
-
-import React, { useState, useEffect, useCallback, createContext, useContext } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { cn } from "@/lib/utils";
-import {
-  IconBrightnessDown, IconBrightnessUp, IconCaretRightFilled, IconCaretUpFilled,
-  IconChevronUp, IconMicrophone, IconMoon, IconPlayerTrackNext, IconPlayerTrackPrev,
-  IconPlayerPlay, IconLayoutGrid, IconVolume, IconVolume2, IconVolume3,
-  IconSearch, IconWorld, IconCommand, IconCaretLeftFilled, IconCaretDownFilled, IconLock,
-} from "@tabler/icons-react";
-
-export function CustomKeyboard({ theme = "dark", enableSound = true }) {
-  return (
-    <div className="mx-auto w-fit p-1 bg-[#161618] rounded-[10px] shadow-2xl">
-      {/* Apple Magic Keyboard Replica */}
-    </div>
-  );
-}`;
+  const manualSourceCode = customKeyboardSourceCode;
 
   return (
     <div
@@ -363,36 +405,22 @@ export function CustomKeyboard({ theme = "dark", enableSound = true }) {
                         <span>Copy</span>
                       </button>
 
-                      <div className={`overflow-hidden ${!isExpanded ? "max-h-40" : ""}`}>
-                        <pre className="leading-relaxed">
-                          <code>
-                            <span className={isDark ? "text-purple-400" : "text-purple-600"}>&quot;use client&quot;</span>;{"\n\n"}
-                            <span className={isDark ? "text-purple-400" : "text-purple-600"}>import</span> React, &#123; useState, useEffect, useCallback &#125; <span className={isDark ? "text-purple-400" : "text-purple-600"}>from</span> <span className={isDark ? "text-emerald-300" : "text-emerald-600"}>&quot;react&quot;</span>;{"\n"}
-                            <span className={isDark ? "text-purple-400" : "text-purple-600"}>import</span> &#123; motion, AnimatePresence &#125; <span className={isDark ? "text-purple-400" : "text-purple-600"}>from</span> <span className={isDark ? "text-emerald-300" : "text-emerald-600"}>&quot;framer-motion&quot;</span>;{"\n"}
-                            <span className={isDark ? "text-purple-400" : "text-purple-600"}>import</span> &#123; cn &#125; <span className={isDark ? "text-purple-400" : "text-purple-600"}>from</span> <span className={isDark ? "text-emerald-300" : "text-emerald-600"}>&quot;@/lib/utils&quot;</span>;{"\n\n"}
-                            <span className={isDark ? "text-purple-400" : "text-purple-600"}>export function</span> <span className={isDark ? "text-blue-400" : "text-blue-600"}>CustomKeyboard</span>(&#123; theme = <span className={isDark ? "text-emerald-300" : "text-emerald-600"}>&quot;dark&quot;</span>, enableSound = <span className={isDark ? "text-purple-400" : "text-purple-600"}>true</span> &#125;) &#123;{"\n"}
-                            {"  "}<span className={isDark ? "text-purple-400" : "text-purple-600"}>return</span> ({"\n"}
-                            {"    "}&lt;<span className={isDark ? "text-pink-400" : "text-pink-600"}>div</span> <span className={isDark ? "text-orange-300" : "text-orange-600"}>className</span>=<span className={isDark ? "text-emerald-300" : "text-emerald-600"}>&quot;mx-auto w-fit p-1 bg-[#161618] rounded-[10px] shadow-2xl&quot;</span>&gt;{"\n"}
-                            {"      "}&#123;/* Apple Magic Keyboard Replica */&#125;{"\n"}
-                            {"    "}&lt;/<span className={isDark ? "text-pink-400" : "text-pink-600"}>div</span>&gt;{"\n"}
-                            {"  "});{"\n"}
-                            &#125;
-                          </code>
-                        </pre>
+                      <div className={`overflow-hidden transition-all ${!isExpanded ? "max-h-64" : "max-h-[800px] overflow-y-auto"}`}>
+                        <div className="p-4 overflow-x-auto whitespace-pre">
+                          <HighlightedCode code={manualSourceCode} isDark={isDark} />
+                        </div>
                       </div>
 
-                      {!isExpanded && (
-                        <div className={`absolute inset-x-0 bottom-0 h-20 flex items-end justify-center pb-2 bg-gradient-to-t ${isDark ? "from-[#08080a] to-transparent" : "from-neutral-100 to-transparent"}`}>
-                          <button
-                            onClick={() => setIsExpanded(true)}
-                            className={`px-4 py-1 rounded-md text-xs font-semibold shadow-lg transition-colors ${
-                              isDark ? "bg-[#282830] text-white hover:bg-neutral-700" : "bg-neutral-900 text-white hover:bg-black"
-                            }`}
-                          >
-                            Expand
-                          </button>
-                        </div>
-                      )}
+                      <div className={`absolute inset-x-0 bottom-0 ${!isExpanded ? "h-24 bg-gradient-to-t " + (isDark ? "from-[#08080a]" : "from-white") + " to-transparent" : "py-3 bg-gradient-to-t " + (isDark ? "from-[#08080a] via-[#08080a]/90" : "from-white via-white/90") + " to-transparent"} flex items-end justify-center pb-2 z-10`}>
+                        <button
+                          onClick={() => setIsExpanded((prev) => !prev)}
+                          className={`px-4 py-1.5 rounded-lg text-xs font-semibold shadow-md border transition-all ${
+                            isDark ? "bg-[#1c1c22] border-neutral-700 text-white hover:bg-neutral-800" : "bg-white border-neutral-300 text-neutral-900 hover:bg-neutral-100"
+                          }`}
+                        >
+                          {isExpanded ? "Collapse Code" : "Expand Code"}
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -405,16 +433,17 @@ export function CustomKeyboard({ theme = "dark", enableSound = true }) {
 
               {/* Import Statement */}
               <div
-                className={`relative rounded-xl border p-3 font-mono text-xs flex items-center justify-between ${
+                className={`relative rounded-xl border p-3.5 font-mono text-xs flex items-center justify-between ${
                   isDark ? "border-neutral-800/80 bg-[#08080a] text-neutral-300" : "border-neutral-200 bg-white text-neutral-800"
                 }`}
               >
                 <code>import &#123; CustomKeyboard &#125; from &quot;@/components/ui/custom-keyboard&quot;;</code>
                 <button
                   onClick={() => copyToClipboard('import { CustomKeyboard } from "@/components/ui/custom-keyboard";', "import-cmd")}
-                  className={`p-1 ${
+                  className={`p-1 transition-colors ${
                     isDark ? "text-neutral-400 hover:text-white" : "text-neutral-500 hover:text-black"
                   }`}
+                  aria-label="Copy Import Code"
                 >
                   {copiedId === "import-cmd" ? (
                     <Check className="h-3.5 w-3.5 text-emerald-500" />
@@ -431,47 +460,18 @@ export function CustomKeyboard({ theme = "dark", enableSound = true }) {
                 }`}
               >
                 <div
-                  className={`flex items-center justify-between border-b px-3 py-2 text-xs ${
-                    isDark ? "border-neutral-800/80 bg-[#0e0e11]" : "border-neutral-200 bg-neutral-100"
+                  className={`flex items-center justify-between border-b px-4 py-2.5 text-xs font-semibold ${
+                    isDark ? "border-neutral-800/80 bg-[#0e0e11] text-neutral-300" : "border-neutral-200 bg-neutral-100 text-neutral-900"
                   }`}
                 >
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={() => setActiveTab("default")}
-                      className={`text-xs font-semibold ${
-                        activeTab === "default"
-                          ? isDark
-                            ? "text-white"
-                            : "text-neutral-900"
-                          : isDark
-                          ? "text-neutral-400 hover:text-neutral-200"
-                          : "text-neutral-500 hover:text-neutral-800"
-                      }`}
-                    >
-                      Default
-                    </button>
-                    <span className="opacity-30">|</span>
-                    <button
-                      onClick={() => setActiveTab("isolated")}
-                      className={`text-xs font-semibold ${
-                        activeTab === "isolated"
-                          ? isDark
-                            ? "text-white"
-                            : "text-neutral-900"
-                          : isDark
-                          ? "text-neutral-400 hover:text-neutral-200"
-                          : "text-neutral-500 hover:text-neutral-800"
-                      }`}
-                    >
-                      Isolated Keys
-                    </button>
-                  </div>
+                  <span>Import component</span>
 
                   <button
                     onClick={() => copyToClipboard(usageCode, "usage-code")}
-                    className={`p-1 ${
+                    className={`p-1 transition-colors ${
                       isDark ? "text-neutral-400 hover:text-white" : "text-neutral-500 hover:text-black"
                     }`}
+                    aria-label="Copy Usage Code"
                   >
                     {copiedId === "usage-code" ? (
                       <Check className="h-3.5 w-3.5 text-emerald-500" />
@@ -500,7 +500,7 @@ export function CustomKeyboard({ theme = "dark", enableSound = true }) {
 
         {/* Right Live Interactive Preview Canvas Pane - FIRST ON MOBILE (order-1 lg:order-2) */}
         <div
-          className={`order-1 lg:order-2 w-full lg:w-1/2 lg:sticky lg:top-0 lg:h-screen flex flex-col items-center justify-between p-4 sm:p-6 lg:p-12 relative min-h-[420px] sm:min-h-[500px] overflow-hidden ${
+          className={`order-1 lg:order-2 w-full lg:w-1/2 lg:sticky lg:top-0 lg:h-screen flex flex-col items-center justify-between p-4 sm:p-6 lg:p-12 relative min-h-[450px] sm:min-h-[520px] overflow-visible ${
             isDark ? "bg-[#141418]" : "bg-neutral-100"
           }`}
         >
@@ -569,9 +569,9 @@ export function CustomKeyboard({ theme = "dark", enableSound = true }) {
             </div>
           </div>
 
-          {/* Centered Keyboard Replica with perfect fit responsive scale */}
-          <div className="my-auto w-full flex items-center justify-center py-4 overflow-hidden max-w-full">
-            <div className="transform scale-[0.42] xs:scale-[0.5] sm:scale-[0.66] md:scale-[0.78] lg:scale-[0.72] xl:scale-[0.88] 2xl:scale-[0.98] transition-transform origin-center">
+          {/* Centered Keyboard Replica with bold responsive scale */}
+          <div className="my-auto w-full flex items-center justify-center py-6 overflow-visible max-w-full">
+            <div className="transform scale-[0.55] xs:scale-[0.68] sm:scale-[0.85] md:scale-[1.0] lg:scale-[1.05] xl:scale-[1.2] 2xl:scale-[1.35] transition-transform origin-center">
               <CustomKeyboard theme={siteTheme} enableSound={soundEnabled} showPreview={true} />
             </div>
           </div>
