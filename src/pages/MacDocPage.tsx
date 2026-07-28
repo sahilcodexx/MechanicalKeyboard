@@ -93,7 +93,6 @@ export default function MacDocPage() {
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const { siteTheme, setSiteTheme } = useSiteTheme();
   const [soundEnabled, setSoundEnabled] = useState(true);
-  const [activeTab, setActiveTab] = useState<"default" | "isolated">("default");
   const [isExpanded, setIsExpanded] = useState(false);
 
   const isDark = siteTheme === "dark";
